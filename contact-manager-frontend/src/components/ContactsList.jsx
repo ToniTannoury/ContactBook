@@ -12,6 +12,7 @@ const ContactsList = ({onEditClick}) => {
 
 
   const [mapCenter, setMapCenter] = useState({ lat: 55, long: 3});
+  const [markerName, setMarkerName] = useState('');
   const [error, setError] = useState(null);
   
 
@@ -54,6 +55,14 @@ const ContactsList = ({onEditClick}) => {
     setMapCenter({ lat: latitude, long: longitude });
   };
 
+  const popUpName = (c_id) => {
+    const contact = contacts.contacts.find((contact) => contact.id === +c_id);
+    
+    if (contact) {
+      setMarkerName(contact.name);
+    }
+  };
+
   return (
     <div className="contactsList">
       
@@ -71,6 +80,7 @@ const ContactsList = ({onEditClick}) => {
           picture={contact.pic_url}
           onEditClick={onEditClick}
           updateMapCenter={updateMapCenter}
+          popUpName = {popUpName}
         />
       )})}
 </div>
@@ -85,7 +95,7 @@ const ContactsList = ({onEditClick}) => {
             />
             <Marker position={[mapCenter.lat, mapCenter.long]}>
               <Popup>
-                A pretty CSS3 popup. <br /> Easily customizable.
+                {markerName}
               </Popup>
             </Marker>
           </MapContainer>

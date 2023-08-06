@@ -5,7 +5,7 @@ import {useContext ,useEffect , useState } from "react"
 import ContactsContext from "../context/ContactController"
 
 
-const ContactItem = ({ name, phone_number, picture, longitude, latitude, id, onEditClick, updateMapCenter }) => {
+const ContactItem = ({ name, phone_number, picture, longitude, latitude, id, onEditClick, updateMapCenter ,popUpName}) => {
   const { contacts, dispatch } = useContext(ContactsContext);
   const [error, setError] = useState(null);
 
@@ -37,9 +37,12 @@ const ContactItem = ({ name, phone_number, picture, longitude, latitude, id, onE
   const handleShowMap = (e) => {
     const long = e.target.parentElement.parentElement.getAttribute("long");
     const lat = e.target.parentElement.parentElement.getAttribute("lat");
+    const c_id = e.target.parentElement.parentElement.getAttribute("c_id");
+   
     console.log(lat);
 
     updateMapCenter(lat, long);
+    popUpName(c_id)
   };
 
   return (
