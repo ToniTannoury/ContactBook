@@ -6,7 +6,8 @@ import ReactModal from 'react-modal';
 
 const PhoneBook = () => {
   const { contacts, dispatch } = useContext(ContactsContext);
-
+  const [error, setError] = useState(null);
+  const clearError = () => setError(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newContact, setNewContact] = useState({
     name: '',
@@ -15,6 +16,11 @@ const PhoneBook = () => {
     longitude: '',
     picture: '',
   });
+
+  const handleAPIError = (errorMessage) => {
+    setError(errorMessage);
+    setTimeout(clearError, 5000); // Clear error after 5 seconds
+  };
 
   const [editContact, setEditContact] = useState(null);
 
@@ -29,38 +35,44 @@ const PhoneBook = () => {
 
   const handleAddContact = (e) => {
     e.preventDefault()
-    setNewContact({
-      name: '',
-      phone_number: '',
-      latitude: '',
-      longitude: '',
-      picture: '',
-    });
-    const addContact = async (name , phone_number , latitude,longitude,pic_url) => {
-      const body = new FormData();
-      body.append('name', name);
-      body.append('phone_number', phone_number);
-      body.append('latitude', latitude);
-      body.append('longitude',longitude);
-      body.append('pic_url', pic_url);
-
-      
-      const response =  await fetch(`http://127.0.0.1:8000/api/contacts` ,{
-        method:"POST",
-        headers:{
-          "Accept":"application/json",
-        },
-        body: body
+    try {
+      setNewContact({
+        name: '',
+        phone_number: '',
+        latitude: '',
+        longitude: '',
+        picture: '',
       });
-
-      const data = await response.json()
-      console.log(data)
+      const addContact = async (name , phone_number , latitude,longitude,pic_url) => {
       
-      dispatch({ type: 'addContact', payload: data.contact});  
+        const body = new FormData();
+        body.append('name', name);
+        body.append('phone_number', phone_number);
+        body.append('latitude', latitude);
+        body.append('longitude',longitude);
+        body.append('pic_url', pic_url);
+  
+        
+        const response =  await fetch(`http://127.0.0.1:8000/api/contacts` ,{
+          method:"POST",
+          headers:{
+            "Accept":"application/json",
+          },
+          body: body
+        });
+  
+        const data = await response.json()
+        console.log(data)
+        
+        dispatch({ type: 'addContact', payload: data.contact});  
+      }
+      
+      addContact(newContact.name , newContact.phone_number , newContact.latitude, newContact.longitude ,  newContact.picture)
+      setIsModalOpen(false);
+    } catch (error) {
+      handleAPIError("An error occurred while adding the contact.")
     }
-    
-    addContact(newContact.name , newContact.phone_number , newContact.latitude, newContact.longitude ,  newContact.picture)
-    setIsModalOpen(false);
+  
   };
 
   const handleEditClick = (e) => {
@@ -72,31 +84,36 @@ const PhoneBook = () => {
   };
 
   const editSelectedContact = async (c_id, name, phone_number, latitude, longitude, picture) => {
-    const body = new FormData();
-    console.log(c_id, name, phone_number, latitude, longitude, picture)
-      body.append('name', name);
-      body.append('phone_number', phone_number);
-      body.append('latitude', latitude);
-      body.append('longitude',longitude);
-      body.append('pic_url', picture);
-
-      for (let pair of body.entries()) {
-        console.log(pair[0] + ', ' + pair[1]);
-      }
-
-    const response = await fetch(`http://127.0.0.1:8000/api/contacts/edit/${c_id}`, {
-      method: "POST",
-      headers: {
-        "Accept": "application/json",
-        
-      },
-      body: body
-    });
-
-    const data = await response.json();
-    console.log(data)
-    dispatch({ type: 'editContact', payload: data.contact });
-    setIsModalOpen(false);
+    try {
+      const body = new FormData();
+      console.log(c_id, name, phone_number, latitude, longitude, picture)
+        body.append('name', name);
+        body.append('phone_number', phone_number);
+        body.append('latitude', latitude);
+        body.append('longitude',longitude);
+        body.append('pic_url', picture);
+  
+        for (let pair of body.entries()) {
+          console.log(pair[0] + ', ' + pair[1]);
+        }
+  
+      const response = await fetch(`http://127.0.0.1:8000/api/contacts/edit/${c_id}`, {
+        method: "POST",
+        headers: {
+          "Accept": "application/json",
+          
+        },
+        body: body
+      });
+  
+      const data = await response.json();
+      console.log(data)
+      dispatch({ type: 'editContact', payload: data.contact });
+      setIsModalOpen(false);
+    } catch (error) {
+      handleAPIError("An error occurred while editing the contact.");
+    }
+   
   };
 
   const handleEditContact = (e) => {
@@ -176,6 +193,7 @@ const PhoneBook = () => {
         <button onClick={editContact ? handleEditContact : handleAddContact}>
           {editContact ? "Save Changes" : "Add Contact"}
         </button>
+        {error && <div className="error-message">{error}</div>}
          </form>
         
         

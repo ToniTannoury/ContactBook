@@ -12,7 +12,7 @@ const ContactsList = ({onEditClick}) => {
 
 
   const [mapCenter, setMapCenter] = useState({ lat: 55, long: 3});
-  const [zoomVal, setZoomVal] = useState(0);
+  const [error, setError] = useState(null);
   
 
  useEffect(()=>{
@@ -22,27 +22,32 @@ const ContactsList = ({onEditClick}) => {
   contain.style = "overflow:visible;"
   
  })
-  useEffect(() => {
-    const fetchProducts = async () => {
-      const response =  await fetch(`http://127.0.0.1:8000/api/contacts` ,{
-        method:"GET",
-        headers:{
-          "Accept":"application/json",
-          "Content-Type":"application/json"
-        }
-      });
-     
+   useEffect(() => {
+    const fetchContacts = async () => {
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/api/contacts`, {
+          method: "GET",
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+          }
+        });
 
-      if (response.ok) {
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message);
+        }
+
         const data = await response.json();
-        dispatch({ type: 'populateContacts', payload: data});
-      } else {
-        console.error("Error fetching contacts:", response);
+        dispatch({ type: 'populateContacts', payload: data });
+      } catch (error) {
+        console.error("Error fetching contacts:", error);
+        setError("Error fetching contacts. Please try again later.");
       }
     };
 
-    fetchProducts();
-  } , []); 
+    fetchContacts();
+  }, [dispatch]);
   
 
   const updateMapCenter = (latitude, longitude) => {
@@ -69,21 +74,23 @@ const ContactsList = ({onEditClick}) => {
         />
       )})}
 </div>
-   
-      <div className="conain" >
-      <MapContainer center={[ mapCenter.lat, mapCenter.long]} zoom={5} zoomControl={false} scrollWheelZoom={true}  style={{ minWidth: "50px",minHeight: "500px" }}>
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <Marker position={[mapCenter.lat, mapCenter.long]}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker>
-      </MapContainer>
-      </div>
-      
+{error ? (
+        <div className="error-message">{error}</div>
+      ) : (
+        <div className="conain">
+          <MapContainer center={[mapCenter.lat, mapCenter.long]} zoom={5} zoomControl={false} scrollWheelZoom={true} style={{ minWidth: "50px", minHeight: "500px" }}>
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <Marker position={[mapCenter.lat, mapCenter.long]}>
+              <Popup>
+                A pretty CSS3 popup. <br /> Easily customizable.
+              </Popup>
+            </Marker>
+          </MapContainer>
+        </div>
+      )}
     </div>
   );
 };

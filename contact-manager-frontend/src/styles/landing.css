@@ -23,6 +23,9 @@
   
 }
 
+.error-message{
+  color: red;
+}
 
 .addContact{
 width: 100px;
