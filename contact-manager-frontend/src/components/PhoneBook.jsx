@@ -21,10 +21,9 @@ const PhoneBook = () => {
   const handleInputChange = (event) => {
     const { name, value, type } = event.target;
     if (editContact) {
-      setEditContact({ ...editContact, [name]: value });
+      setEditContact({ ...editContact, [name]: type === 'file' ? event.target.files[0] : value });
     } else {
-      const newValue = type === 'file' ? event.target.files[0] : value;
-      setNewContact({ ...newContact, [name]: newValue });
+      setNewContact({ ...newContact, [name]: type === 'file' ? event.target.files[0] : value });
     }
   };
 
@@ -45,10 +44,7 @@ const PhoneBook = () => {
       body.append('longitude',longitude);
       body.append('pic_url', pic_url);
 
-      for (let pair of body.entries()) {
-        console.log(pair[0] + ', ' + pair[1]);
-      }
-
+      
       const response =  await fetch(`http://127.0.0.1:8000/api/contacts` ,{
         method:"POST",
         headers:{
@@ -75,20 +71,26 @@ const PhoneBook = () => {
     setIsModalOpen(true);
   };
 
-  const editSelectedContact = async (c_id, name, phone_number, latitude, longitude, pic_url) => {
-    const body = {
-      "name": name,
-      "phone_number": +phone_number,
-      "latitude": latitude,
-      "longitude": longitude,
-    };
-    const response = await fetch(`http://127.0.0.1:8000/api/contacts/${c_id}`, {
-      method: "PUT",
+  const editSelectedContact = async (c_id, name, phone_number, latitude, longitude, picture) => {
+    const body = new FormData();
+    console.log(c_id, name, phone_number, latitude, longitude, picture)
+      body.append('name', name);
+      body.append('phone_number', phone_number);
+      body.append('latitude', latitude);
+      body.append('longitude',longitude);
+      body.append('pic_url', picture);
+
+      for (let pair of body.entries()) {
+        console.log(pair[0] + ', ' + pair[1]);
+      }
+
+    const response = await fetch(`http://127.0.0.1:8000/api/contacts/edit/${c_id}`, {
+      method: "POST",
       headers: {
         "Accept": "application/json",
-        "Content-Type": "application/json"
+        
       },
-      body: JSON.stringify(body)
+      body: body
     });
 
     const data = await response.json();
@@ -100,8 +102,10 @@ const PhoneBook = () => {
   const handleEditContact = (e) => {
     e.preventDefault()
     if (editContact) {
-      const { id, name, phone_number, latitude, longitude, location_name } = editContact;
-      editSelectedContact(id, name, phone_number, latitude, longitude, location_name);
+      console.log(editContact)
+      const { id, name, phone_number, latitude, longitude,  picture } = editContact;
+      console.log( id, name, phone_number, latitude, longitude,  picture )
+      editSelectedContact(id, name, phone_number, latitude, longitude, picture);
     }
   };
 

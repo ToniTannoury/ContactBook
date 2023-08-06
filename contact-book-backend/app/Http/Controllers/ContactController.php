@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Models\Contact;
 use Illuminate\Http\Request;
 
+use function Laravel\Prompts\error;
+
 class ContactController extends Controller
 {
     public function store(Request $request)
@@ -68,16 +70,39 @@ class ContactController extends Controller
     public function update(Request $request, $id)
     {
         $contact = Contact::findOrFail($id);
-
-   
-
-        $contact->update($request->all());
-
+        
+    
+        $request->validate([
+            'name' => 'required|string',
+            'phone_number' => 'required|numeric',
+            'longitude' => 'nullable|numeric',
+            'latitude' => 'nullable|numeric',
+        ]);
+        error_log(55555);
+    
+        $contact->update([
+            'name' => $request->name,
+            'phone_number' => $request->phone_number,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+        ]);
+    
+        if ($request->hasFile('pic_url')) {
+            error_log(11111);
+            $uploadedFile = $request->file('pic_url');
+            $name = $uploadedFile->getClientOriginalName();
+            $uploadedFile->move(public_path('images'), $name);
+            $contact->update([
+                'pic_url' => $name,
+            ]);
+        }
+    
         return response()->json([
             'message' => 'Contact updated successfully',
             'contact' => $contact,
         ], 200);
     }
+    
 
     public function destroy($id)
     {
