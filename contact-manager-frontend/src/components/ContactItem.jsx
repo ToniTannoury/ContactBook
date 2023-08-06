@@ -3,7 +3,6 @@ import { FaEdit, FaTrash, FaUser, FaPhone, FaMapMarkerAlt ,FaMap} from 'react-ic
 import "../styles/contactItem.css"
 import {useContext ,useEffect , useState } from "react"
 import ContactsContext from "../context/ContactController"
-
 const ContactItem = ( { name, phone_number, picture, longitude, latitude,id , onEditClick , updateMapCenter} ) => {
   const { contacts, dispatch } = useContext(ContactsContext);
   const handleDelete = async(e)=>{
@@ -34,7 +33,7 @@ const ContactItem = ( { name, phone_number, picture, longitude, latitude,id , on
     <div className='contactContainer'>
       <div className='contact' c_id={id} long={longitude} lat={latitude}>
         <div className='contactImage'>
-          <img src={picture} alt='Profile' />
+          <img src={`http://127.0.0.1:8000/images/${picture}`} alt='Profile' />
         </div>
         <div className='contactInfo'>
           <h3>

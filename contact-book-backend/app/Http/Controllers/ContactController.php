@@ -13,7 +13,7 @@ class ContactController extends Controller
             'phone_number' => 'required|numeric',
             'longitude' => 'nullable|numeric',
             'latitude' => 'nullable|numeric',
-            'pic_url' => 'nullable|string|url',
+            
         ]);
 
         $existingContact = Contact::where('phone_number', $request->phone_number)->first();
@@ -23,8 +23,32 @@ class ContactController extends Controller
                 'message' => 'Contact with the same phone number already exists'
             ], 409);
         }
+        if ($request->hasFile('pic_url')) {
+            error_log(112); 
+            $uploadedFile = $request->file('pic_url');
+            $name = $uploadedFile->getClientOriginalName();
+            $uploadedFile->move(public_path('images'), $name);
+            $contact = Contact::create([
+                'name' => $request->name,
+                'phone_number' => $request->phone_number,
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude,
+                "pic_url" => $name
+            ]);
+            
+            return response()->json([
+                'message' => 'Contact created successfully',
+                'contact' => $contact,
+            ], 201);
+        }
 
-        $contact = Contact::create($request->all());
+        $contact = Contact::create([
+            'name' => $request->name,
+            'phone_number' => $request->phone_number,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+            "pic_url" => "profile.png"
+        ]);
 
         return response()->json([
             'message' => 'Contact created successfully',

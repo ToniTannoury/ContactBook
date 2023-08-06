@@ -19,18 +19,17 @@ const PhoneBook = () => {
   const [editContact, setEditContact] = useState(null);
 
   const handleInputChange = (event) => {
-    const { name, value } = event.target;
+    const { name, value, type } = event.target;
     if (editContact) {
-   
       setEditContact({ ...editContact, [name]: value });
     } else {
-    
-      setNewContact({ ...newContact, [name]: value });
+      const newValue = type === 'file' ? event.target.files[0] : value;
+      setNewContact({ ...newContact, [name]: newValue });
     }
-  }
+  };
 
-  const handleAddContact = () => {
-    
+  const handleAddContact = (e) => {
+    e.preventDefault()
     setNewContact({
       name: '',
       phone_number: '',
@@ -39,19 +38,23 @@ const PhoneBook = () => {
       picture: '',
     });
     const addContact = async (name , phone_number , latitude,longitude,pic_url) => {
-      const body = {
-        "name":name,
-        "phone_number" :phone_number,
-        "latitude": latitude,
-        "longitude":longitude,
+      const body = new FormData();
+      body.append('name', name);
+      body.append('phone_number', phone_number);
+      body.append('latitude', latitude);
+      body.append('longitude',longitude);
+      body.append('pic_url', pic_url);
+
+      for (let pair of body.entries()) {
+        console.log(pair[0] + ', ' + pair[1]);
       }
+
       const response =  await fetch(`http://127.0.0.1:8000/api/contacts` ,{
         method:"POST",
         headers:{
           "Accept":"application/json",
-          "Content-Type":"application/json"
         },
-        body:JSON.stringify(body)
+        body: body
       });
 
       const data = await response.json()
@@ -60,7 +63,7 @@ const PhoneBook = () => {
       dispatch({ type: 'addContact', payload: data.contact});  
     }
     
-    addContact(newContact.name , newContact.phone_number , newContact.latitude, newContact.longitude ,  newContact.pic_url)
+    addContact(newContact.name , newContact.phone_number , newContact.latitude, newContact.longitude ,  newContact.picture)
     setIsModalOpen(false);
   };
 
@@ -94,7 +97,8 @@ const PhoneBook = () => {
     setIsModalOpen(false);
   };
 
-  const handleEditContact = () => {
+  const handleEditContact = (e) => {
+    e.preventDefault()
     if (editContact) {
       const { id, name, phone_number, latitude, longitude, location_name } = editContact;
       editSelectedContact(id, name, phone_number, latitude, longitude, location_name);
@@ -127,7 +131,9 @@ const PhoneBook = () => {
         className="modal"
         overlayClassName="overlay"
       >
-        <h2>{editContact ? "Edit Contact" : "Add New Contact"}</h2>
+         <form encType="multipart/form-data">
+
+         <h2>{editContact ? "Edit Contact" : "Add New Contact"}</h2>
         <input
           type="text"
           name="name"
@@ -166,6 +172,9 @@ const PhoneBook = () => {
         <button onClick={editContact ? handleEditContact : handleAddContact}>
           {editContact ? "Save Changes" : "Add Contact"}
         </button>
+         </form>
+        
+        
       </ReactModal>
     </div>
   );

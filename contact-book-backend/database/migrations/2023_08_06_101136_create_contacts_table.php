@@ -14,7 +14,7 @@ class CreateContactsTable extends Migration
             $table->string('phone_number');
             $table->double('longitude')->nullable();
             $table->double('latitude')->nullable();
-            $table->string('pic_url')->default('https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png');
+            $table->string('pic_url')->default('profile.png');
             $table->timestamps();
         });
     }
