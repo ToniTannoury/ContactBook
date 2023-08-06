@@ -161,6 +161,7 @@ const PhoneBook = () => {
           value={editContact ? editContact.name : newContact.name}
           placeholder="Name"
           onChange={handleInputChange}
+          required
         />
         <input
           type="text"
@@ -168,6 +169,7 @@ const PhoneBook = () => {
           value={editContact ? editContact.phone_number : newContact.phone_number}
           placeholder="Phone Number"
           onChange={handleInputChange}
+          required
         />
         <input
           type="text"
@@ -175,6 +177,7 @@ const PhoneBook = () => {
           value={editContact ? editContact.latitude : newContact.latitude}
           placeholder="Latitude"
           onChange={handleInputChange}
+          required
         />
         <input
           type="text"
@@ -182,6 +185,7 @@ const PhoneBook = () => {
           value={editContact ? editContact.longitude : newContact.longitude}
           placeholder="Longitude"
           onChange={handleInputChange}
+          required
         />
         <input
           type="file"
