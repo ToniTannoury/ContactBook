@@ -2,7 +2,6 @@ import React, { useState, useContext } from 'react';
 import ContactsContext from "../context/ContactController";
 import ContactsList from "./ContactsList";
 import "../styles/landing.css";
-import "../styles/login.css";
 import ReactModal from 'react-modal';
 
 const PhoneBook = () => {

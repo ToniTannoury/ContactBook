@@ -71,7 +71,7 @@ const ContactsList = ({onEditClick}) => {
 </div>
    
       <div className="conain" >
-      <MapContainer center={[ mapCenter.lat, mapCenter.long]} zoom={5} zoomControl={false} scrollWheelZoom={false}  style={{ minWidth: "50px",minHeight: "500px" }}>
+      <MapContainer center={[ mapCenter.lat, mapCenter.long]} zoom={5} zoomControl={false} scrollWheelZoom={true}  style={{ minWidth: "50px",minHeight: "500px" }}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
