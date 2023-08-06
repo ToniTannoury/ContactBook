@@ -1,0 +1,58 @@
+/* Add your custom styles for the ContactItem component */
+
+.contactContainer {
+  margin: 10px;
+  color: whitesmoke;
+  background-color:#333300 ;
+}
+
+.contact {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.contactImage {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 10px;
+}
+
+.contactImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.contactInfo {
+  flex: 1;
+}
+
+.contactInfo h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.contactActions {
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  margin: 10px;
+}
+
+.contactActions button {
+  background-color: #0099cc;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.contactActions button:hover {
+  background-color: #33ccff;
+}

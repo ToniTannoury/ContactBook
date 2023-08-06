@@ -1,0 +1,78 @@
+.phoneBook{
+  margin: 0;
+  /* display: flex; */
+  justify-content: space-around;
+  align-items: center;
+  min-height: 100vh;
+  background-size: cover; 
+  background-repeat: no-repeat;
+  background-color:#000033;
+}
+.contactsHeader{
+  color: wheat;
+}
+.headerContainer{
+  display: flex;
+  justify-content: space-between;
+  width:75%
+}
+
+
+.addContact{
+width: 100px;
+height: 50px;
+margin-top: 20px;
+margin-right: 40px;
+}
+/* modal.css */
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  width: 100%;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  /* display: flex; */
+  justify-content: center;
+  align-items: center;
+}
+.contactsList{
+  display: flex;
+
+  width:100w;
+}
+.contacts{
+  width: 1000px;
+}
+.conain{
+  margin-top: 100px;
+  width: 100px;
+  height: 100px;
+  
+}
+.conain {
+  width: 300px;
+  height: 70vw; /* Set the desired height for the map container */
+  overflow: hidden;
+  position: fixed;
+  top: -100px; /* Set the desired distance from the top of the viewport */
+  right: 10px; /* Set the desired distance from the right of the viewport */
+  bottom: 100px;
+  background-color: #f1f1f1;
+  padding: 15px;
+  border: 1px solid #ccc;
+  margin-bottom: 100px;
+}
