@@ -8,11 +8,9 @@ const ContactItem = ( { name, phone_number, picture, longitude, latitude,id , on
   const { contacts, dispatch } = useContext(ContactsContext);
   const handleDelete = async(e)=>{
     const c_id = +e.target.parentElement.parentElement.getAttribute("c_id")
-    const token = localStorage.getItem("token");
-    const response =  await fetch(`http://127.0.0.1:8000/api/user/contacts/${c_id}` ,{
+    const response =  await fetch(`http://127.0.0.1:8000/api/contacts/${c_id}` ,{
       method:"DELETE",
       headers:{
-        "Authorization" : `Bearer ${token}`,
         "Accept":"application/json",
         "Content-Type":"application/json"
       }

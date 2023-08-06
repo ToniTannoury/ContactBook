@@ -6,7 +6,11 @@ import { MapContainer, TileLayer, useMap ,Marker , Popup ,ZoomControl } from 're
 
 
 const ContactsList = ({onEditClick}) => {
+
   const { contacts, dispatch } = useContext(ContactsContext);
+  console.log((contacts.contacts))
+
+
   const [mapCenter, setMapCenter] = useState({ lat: 55, long: 3});
   const [zoomVal, setZoomVal] = useState(0);
   
@@ -15,20 +19,14 @@ const ContactsList = ({onEditClick}) => {
   
   const contain = document.querySelector(".leaflet-container")
   
-  console.log(contain)
   contain.style = "overflow:visible;"
   
  })
-  console.log(contacts)
   useEffect(() => {
     const fetchProducts = async () => {
-      const token = localStorage.getItem("token");
-      const id = localStorage.getItem("id");
-      console.log(id)
-      const response =  await fetch(`http://127.0.0.1:8000/api/user/contacts/${id}` ,{
+      const response =  await fetch(`http://127.0.0.1:8000/api/contacts` ,{
         method:"GET",
         headers:{
-          "Authorization" : `Bearer ${token}`,
           "Accept":"application/json",
           "Content-Type":"application/json"
         }
@@ -37,7 +35,6 @@ const ContactsList = ({onEditClick}) => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data)
         dispatch({ type: 'populateContacts', payload: data});
       } else {
         console.error("Error fetching contacts:", response);
@@ -45,7 +42,7 @@ const ContactsList = ({onEditClick}) => {
     };
 
     fetchProducts();
-  }, []);
+  } , []); 
   
 
   const updateMapCenter = (latitude, longitude) => {
@@ -55,8 +52,9 @@ const ContactsList = ({onEditClick}) => {
   return (
     <div className="contactsList">
       
+
 <div className="contacts">
-{contacts?.map((contact) => {
+{contacts.contacts?.map((contact) => {
         return (
         <ContactItem
           key={contact.id}
